@@ -5,7 +5,7 @@
   
 # Heritability_estimation_NGG
 
-Heritability_estimation_NGG is a set of tool based on scikit and keras.
+Heritability_estimation_NGG is a script designed to estimate heritability gain in multidimentional GWAS analysis.
 	  
 This code has been designed by CARLUER Jean-Baptiste for research purpose : "Link to the paper"
 
