@@ -7,8 +7,6 @@ import random
 def normalise_r2(r2, p, n):
     return 1 - (1-r2)*((n-1)/(n - p - 1) )
 
-from LINEAR_REG import computeLm_plot, computeLm
-
 def normalise(Y):
     return (Y - np.mean(Y))/np.std(Y)
 
@@ -64,7 +62,6 @@ def generate_X_Xp_Z_Thetas(X, Theta_hat, Theta_hat_ID, Theta, Theta_ID, usektop=
     if usektop:
         X_gen.drop(X_gen.columns[ktop1D:], axis=1, inplace=True)
     Xp = pd.concat([X_gen, Z], axis=1)
-    print(len(Xp.columns))
     return X_gen, Xp, Z, Theta, Theta_hat, Theta_ID, Theta_hat_ID
 
 def plot_multiple_Y_plot(x, y=[], title="", outplot_path="",legend=[], line_type=[], debug=False, adjusted_r2=False, study = "PCR"):
@@ -101,33 +98,20 @@ def save_results(results_list, results_path):
         for results in results_list:
             file.write(str(results) + "\n")
 
-def run_and_save(func, out, Y, datas=[], data_label = [], adjusted_r2=False, sep=',', n_component=25):
-    with open(out, 'w') as file:
-        for i in range(0, len(datas)):
-            if len(datas[i].columns)>len(datas[i].index):
-                r2_score = func(datas[i], Y, n_component=n_component, adjusted_r2=adjusted_r2)
-                file.write(data_label[i] + sep + str(r2_score) + "\n")
-            else:
-                r2_score = computeLm(datas[i], Y, adjusted_r2=adjusted_r2)
-                file.write(data_label[i] + sep + str(r2_score) + "\n")
+from PCR import computePCR
+from PLS import computePLS
 
-def run_and_save_multiY_plot(func, Y, out="", study = "", datas=[], title = [], adjusted_r2=False, debug=False, models = ["1D", "1D+2D"], n_component=25):
+def estimate_heritability(X_datas, Y_datas, method="PCR", n_component=25, adjusted_r2=True):
     r2_list = []
-    for i in range(0, len(datas)):
-        if len(datas[i].columns)>len(datas[i].index):
-            r2_list.append(func(datas[i], Y, n_component=n_component, outplot_path = out+models[i]+"_"+study+".png", title = title[i], debug = debug, adjusted_r2 = adjusted_r2))
-        else:
-            r2_list.append(computeLm_plot(datas[i], Y, n_component=n_component, outplot_path = out+models[i]+"_LM.png" , title = title[i], debug = debug, adjusted_r2 = adjusted_r2))
-    return r2_list
-
-def run_and_save_tt(func, out, Y, datas=[], data_label = [], adjusted_r2=False, sep=',', n_component=25):
-    with open(out, 'w') as file:
-        r2_score = func(datas[1], Y, n_component=n_component, adjusted_r2=adjusted_r2)
-        file.write(data_label[1] + sep + str(r2_score) + "\n")
-
-def run_and_save_multiY_plot_tt(func, Y, out="", study = "", datas=[], title = [], adjusted_r2=False, debug=False, models = ["1D", "1D+2D"], n_component=25):
-    r2_list = []
-    r2_list=func(datas, Y, outplot_path = out+models[0]+"_"+study+".png", title = title[0], debug = debug, adjusted_r2 = adjusted_r2)
+    if method=="PCR":
+        for i in range(0, len(X_datas)):
+            r2_list.append(computePCR(X_datas[i], Y_datas, n_component=n_component, adjusted_r2=adjusted_r2))
+    elif method=="PLS":
+        for i in range(0, len(X_datas)):
+            r2_list.append(computePLS(X_datas[i], Y_datas, n_component=n_component, adjusted_r2=adjusted_r2))
+    else:
+        print("ERROR : FUNC " + method + " is unknown !")
+        exit(0)
     return r2_list
 
 
