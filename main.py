@@ -1,9 +1,6 @@
-from doctest import OutputChecker
-from LINEAR_REG import *
 from utilities import *
 import pandas as pd
 import numpy as np
-import os
 import sys
 
 DEBUG = False

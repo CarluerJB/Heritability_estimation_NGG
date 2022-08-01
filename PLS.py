@@ -1,7 +1,5 @@
-import imp
+
 from sklearn.cross_decomposition import PLSRegression
-import matplotlib.pyplot as plt
-import pandas as pd
 from utilities import normalise_r2
 
 def computePLS(X, Y, n_component=25, adjusted_r2=False):

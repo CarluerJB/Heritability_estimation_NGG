@@ -2,12 +2,10 @@ from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
 from utilities import normalise_r2
 
-def computePCR_sklearn(X : pd.DataFrame, Y, n_component=25, adjusted_r2=False):
+def computePCR_sklearn(X, Y, n_component=25, adjusted_r2=False):
     pcr = make_pipeline(StandardScaler(), PCA(n_components=n_component), LinearRegression())
     pcr.fit(X, Y)
     if adjusted_r2:
